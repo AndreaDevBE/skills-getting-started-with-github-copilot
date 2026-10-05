@@ -48,7 +48,45 @@ document.addEventListener("DOMContentLoaded", () => {
           const participantsList = document.createElement("ul");
           details.participants.forEach((participant) => {
             const participantItem = document.createElement("li");
-            participantItem.textContent = participant;
+            const participantEmail = document.createElement("span");
+            participantEmail.textContent = participant;
+
+            const removeButton = document.createElement("button");
+            removeButton.className = "participant-remove";
+            removeButton.type = "button";
+            removeButton.textContent = "🗑";
+            removeButton.setAttribute("aria-label", `Unregister ${participant} from ${name}`);
+            removeButton.addEventListener("click", async () => {
+              try {
+                const response = await fetch(
+                  `/activities/${encodeURIComponent(name)}/signup?email=${encodeURIComponent(participant)}`,
+                  { method: "DELETE" }
+                );
+                const result = await response.json();
+
+                if (!response.ok) {
+                  messageDiv.textContent = result.detail || "An error occurred";
+                  messageDiv.className = "error";
+                  messageDiv.classList.remove("hidden");
+                } else {
+                  messageDiv.textContent = result.message;
+                  messageDiv.className = "success";
+                  messageDiv.classList.remove("hidden");
+                  await fetchActivities();
+                }
+              } catch (error) {
+                messageDiv.textContent = "Failed to unregister. Please try again.";
+                messageDiv.className = "error";
+                messageDiv.classList.remove("hidden");
+                console.error("Error unregistering participant:", error);
+              }
+
+              setTimeout(() => {
+                messageDiv.classList.add("hidden");
+              }, 5000);
+            });
+
+            participantItem.append(participantEmail, removeButton);
             participantsList.appendChild(participantItem);
           });
           participantsSection.appendChild(participantsList);
