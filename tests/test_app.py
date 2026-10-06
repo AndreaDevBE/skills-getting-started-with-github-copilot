@@ -16,7 +16,7 @@ def reset_activities(monkeypatch):
 
 
 def test_about_page_is_available():
-    response = client.get("/about")
+    response = client.get("/about-the-app")
 
     assert response.status_code == 200
     assert "About Mergington High School" in response.text

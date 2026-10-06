@@ -83,7 +83,7 @@ def root():
     return RedirectResponse(url="/static/index.html")
 
 
-@app.get("/about")
+@app.get("/about-the-app")
 def about_page():
     return FileResponse(current_dir / "static" / "about.html")
 
