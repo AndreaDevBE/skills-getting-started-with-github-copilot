@@ -14,7 +14,9 @@ def test_student_cannot_sign_up_twice_for_same_activity():
         activities[activity_name]["participants"] = [email]
         response = client.post(f"/activities/{activity_name}/signup?email={email}")
         assert response.status_code == 400
-        assert response.json() == {"detail": "Student is already signed up"}
+        assert response.json() == {
+            "detail": "Student is already signed up for this activity"
+        }
     finally:
         activities[activity_name]["participants"] = original_participants
 
