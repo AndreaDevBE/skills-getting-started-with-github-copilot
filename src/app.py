@@ -78,6 +78,14 @@ activities = {
 }
 
 
+def normalize_email(email: str) -> str:
+    return email.strip().lower()
+
+
+def get_participant_emails(activity: dict) -> set[str]:
+    return {normalize_email(participant) for participant in activity["participants"]}
+
+
 @app.get("/")
 def root():
     return RedirectResponse(url="/static/index.html")
@@ -100,14 +108,12 @@ def signup_for_activity(activity_name: str, email: str):
     if activity_name not in activities:
         raise HTTPException(status_code=404, detail="Activity not found")
 
-    # Get the specific activity
+    # Get the activity
     activity = activities[activity_name]
-    normalized_email = email.strip().lower()
+    normalized_email = normalize_email(email)
 
     # Validate student is not already signed up
-    if normalized_email in {
-        participant.strip().lower() for participant in activity["participants"]
-    }:
+    if normalized_email in get_participant_emails(activity):
         raise HTTPException(
             status_code=400,
             detail="Student is already signed up for this activity",
@@ -129,10 +135,8 @@ def unregister_from_activity(activity_name: str, email: str):
         raise HTTPException(status_code=404, detail="Activity not found")
 
     activity = activities[activity_name]
-    normalized_email = email.strip().lower()
-    if normalized_email not in {
-        participant.strip().lower() for participant in activity["participants"]
-    }:
+    normalized_email = normalize_email(email)
+    if normalized_email not in get_participant_emails(activity):
         raise HTTPException(
             status_code=404,
             detail="Student is not signed up for this activity",
@@ -141,6 +145,6 @@ def unregister_from_activity(activity_name: str, email: str):
     activity["participants"] = [
         participant
         for participant in activity["participants"]
-        if participant.strip().lower() != normalized_email
+        if normalize_email(participant) != normalized_email
     ]
     return {"message": f"Unregistered {normalized_email} from {activity_name}"}
