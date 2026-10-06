@@ -15,6 +15,13 @@ def reset_activities(monkeypatch):
     monkeypatch.setattr(app_module, "activities", deepcopy(INITIAL_ACTIVITIES))
 
 
+def test_about_page_is_available():
+    response = client.get("/about-the-app")
+
+    assert response.status_code == 200
+    assert "About Mergington High School" in response.text
+
+
 def test_get_activities_returns_all_activities():
     response = client.get("/activities")
 

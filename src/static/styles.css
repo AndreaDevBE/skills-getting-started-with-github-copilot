@@ -15,6 +15,23 @@ body {
   background-color: #f5f5f5;
 }
 
+.top-nav {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+.top-nav a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.top-nav a:hover {
+  text-decoration: underline;
+}
+
 header {
   text-align: center;
   padding: 20px 0;
@@ -33,6 +50,24 @@ main {
   flex-wrap: wrap;
   gap: 30px;
   justify-content: center;
+}
+
+.about-page {
+  display: grid;
+  gap: 24px;
+  width: min(900px, 100%);
+}
+
+.about-card {
+  background-color: white;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+.about-card ul {
+  margin-left: 20px;
+  line-height: 1.8;
 }
 
 @media (min-width: 768px) {
